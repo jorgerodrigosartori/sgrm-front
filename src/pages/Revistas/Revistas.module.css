@@ -1,0 +1,17 @@
+.cards{
+    align-items: center;
+    display: flex;
+
+    width: 900px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.iconesAzul{
+    font-size: 25px;
+    color: rgba(150, 213, 255, 0.849);
+}
+.iconesVermelho{
+    font-size: 25px;
+    color: rgba(255, 166, 150, 0.849);
+}

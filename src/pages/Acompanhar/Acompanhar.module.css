@@ -1,0 +1,18 @@
+.iconesAzul{
+    font-size: 25px;
+    color: rgba(150, 213, 255, 0.849);
+    cursor: pointer;
+}
+
+.iconesAzulEscuro{
+    font-size: 25px;
+    color: rgba(21, 95, 255, 0.849);
+    cursor: pointer;
+}
+
+.iconesVermelho{
+    font-size: 25px;
+    color: rgba(255, 166, 150, 0.849);
+    cursor: pointer;
+}
+
