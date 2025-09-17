@@ -30,7 +30,7 @@ const Acompanhar = () => {
 
     const removerProcesso = async (processo, nome) => { 
 
-        axios.delete(`http://localhost:8080/v1/processo/${processo}`)
+        axios.delete(`${API_BASE_URL}/v1/processo/${processo}`)
             .then(resposta => {
                 carregaListaMarcasAcompanhar();
                 dispatch({ type: "SET_NOTIFICACAO_SUCESSO", payload: { mensagem: 'Processo ' + processo + ' (' + nome + ') removido com sucesso.' } });

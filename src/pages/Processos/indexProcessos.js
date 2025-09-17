@@ -33,7 +33,7 @@ const Processos = () => {
 
     const adicionaProcesso = (processo, nome) => {
 
-        axios.put(`http://localhost:8080/v1/processo/${processo}`)
+        axios.put(`${API_BASE_URL}/v1/processo/${processo}`)
             .then(resposta => {
                 pesquisar();
                 dispatch({ type: "SET_NOTIFICACAO_SUCESSO", payload: { mensagem: 'Processo ' + processo + ' (' + nome + ') adicionado a lista de Minhas marcas.' } });
@@ -45,7 +45,7 @@ const Processos = () => {
 
     const removerProcesso = (processo, nome) => {
 
-        axios.delete(`http://localhost:8080/v1/processo/${processo}`)
+        axios.delete(`${API_BASE_URL}/v1/processo/${processo}`)
             .then(resposta => {
                 pesquisar();
                 dispatch({ type: "SET_NOTIFICACAO_SUCESSO", payload: { mensagem: 'Processo ' + processo + ' (' + nome + ') removido da lista de Minhas marcas.' } });
