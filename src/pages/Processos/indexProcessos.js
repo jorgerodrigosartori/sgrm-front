@@ -19,6 +19,7 @@ import { listarProcessosPorParametro } from "../../global/action/processoAction"
 import { listarDespachosDoProcesso } from "../../global/action/despachoAction";
 import { MyContext } from '../../global/contexto/MyContext';
 import ModalDespachos from '../../components/Modal/indexModal';
+import { API_BASE_URL } from "../../global/api/EnderecoServidor";
 
 const Processos = () => {
 

@@ -15,6 +15,7 @@ import axios from 'axios';
 import styles from './Acompanhar.module.css';
 import {marcarDesmarcarSemelhantesAction, listarProcessosAcompanhadosAction} from '../../global/action/processoAcompanhadosAction.js';
 import ModalProcessando from '../../components/Modal/indexModalProcessando.js';
+import { API_BASE_URL } from '../../global/api/EnderecoServidor.js';
 
 const Acompanhar = () => {
 
