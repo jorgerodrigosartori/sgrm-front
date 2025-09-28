@@ -1,4 +1,5 @@
 import { listarProcessos, listarProcessosPorSemelhanca, adicionarProcesso} from '../api/ProcessoApi';
+import { carregarProcessoRevista} from '../api/RevistaApi';
 
 export const listarProcessosPorParametro = async (dispatch, processo, marca) => {
 
@@ -50,4 +51,22 @@ export const adicionarProcessoAcompanhamento = async (dispatch, processo, nome) 
         })
 }
 
+export const recuperarProcessoRevista = async (dispatch, processo, revista) => {
+
+    dispatch({ type: "SET_IS_LOADING", payload: true });
+    carregarProcessoRevista(processo, revista)
+        .then(resposta => {
+            if(resposta.data.resultado === true){
+                dispatch({ type: "SET_NOTIFICACAO_SUCESSO", payload: {mensagem: 'Carga do processo realizada com sucesso.'} });
+            }else{
+                dispatch({ type: "SET_NOTIFICACAO_ALERTA", payload: {mensagem: resposta.data.mensagem} });
+            }
+            dispatch({ type: "SET_IS_LOADING", payload: false });
+        })
+        .catch(err => {
+            console.log("erro: " + err);
+            dispatch({ type: "SET_NOTIFICACAO_ERRO", payload: {mensagem: 'ERRO: ' + err} });
+            dispatch({ type: "SET_IS_LOADING", payload: false });
+        })
+}
 
