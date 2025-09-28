@@ -15,6 +15,7 @@ export const initialState = {
     },
     processoAcompanhadoReducer:{
         processos : [],
+        colunaOrdenada : 'MARCA',
     },
     despachoReducer: {
         despachos: [],
@@ -61,9 +62,8 @@ export const reducer = (state, action) => {
             return { ...state, notificacao: { visivel: true, mensagem: action.payload.mensagem, severidade: 'error' } };
         case "SET_LISTA_REVISTAS":
             return { ...state, revista: { ...state.revista, lista: action.payload } };
-
         case "SET_LISTA_PROCESSOS_ACOMPANHADOS":
-            return { ...state, processoAcompanhadoReducer: { ...state.processoAcompanhadoReducer, processos: action.payload } };
+            return { ...state, processoAcompanhadoReducer: { ...state.processoAcompanhadoReducer, processos: action.payload.lista, colunaOrdenada: action.payload.coluna } };
 
         default:
             return state;

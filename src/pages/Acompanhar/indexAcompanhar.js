@@ -13,9 +13,10 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import { useEffect } from 'react';
 import axios from 'axios';
 import styles from './Acompanhar.module.css';
-import {marcarDesmarcarSemelhantesAction, listarProcessosAcompanhadosAction} from '../../global/action/processoAcompanhadosAction.js';
+import { marcarDesmarcarSemelhantesAction, listarProcessosAcompanhadosAction, ordenarProcessosAcompanhadosAction } from '../../global/action/processoAcompanhadosAction.js';
 import ModalProcessando from '../../components/Modal/indexModalProcessando.js';
 import { API_BASE_URL } from '../../global/api/EnderecoServidor.js';
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
 
 const Acompanhar = () => {
 
@@ -24,12 +25,12 @@ const Acompanhar = () => {
     const [apresentarModalDespacho, setApresentarModalDespacho] = React.useState(false);
     const [despachosModal, setDespachosModal] = React.useState([]);
 
-    const marcaDesmarcaProcessoAcompanhado = async (processo, semelhantes) =>{
+    const marcaDesmarcaProcessoAcompanhado = async (processo, semelhantes) => {
 
         marcarDesmarcarSemelhantesAction(dispatch, processo, semelhantes);
     }
 
-    const removerProcesso = async (processo, nome) => { 
+    const removerProcesso = async (processo, nome) => {
 
         axios.delete(`${API_BASE_URL}/v1/processo/${processo}`)
             .then(resposta => {
@@ -45,13 +46,16 @@ const Acompanhar = () => {
         carregaListaMarcasAcompanhar();
     }, [])
 
-    //const pesquisar = async () => {
     const carregaListaMarcasAcompanhar = async () => {
 
         listarProcessosAcompanhadosAction(dispatch);
-
-        
     }
+
+    const ordenarProcessosAcompanhados = async (coluna) => {
+
+        ordenarProcessosAcompanhadosAction(dispatch, (state.processoAcompanhadoReducer && state.processoAcompanhadoReducer.processos) || [], coluna)
+    }
+
 
     const abrirModal = (despachos) => {
         setApresentarModalDespacho(true);
@@ -62,12 +66,12 @@ const Acompanhar = () => {
         setApresentarModalDespacho(false);
     }
 
-    function apresentarEstrela(processo, semelhantes){
+    function apresentarEstrela(processo, semelhantes) {
 
-        if(semelhantes && semelhantes === 'S')
+        if (semelhantes && semelhantes === 'S')
             return (
                 <div title='Deixar de verificar senelhanças'>
-                    <GradeIcon className={styles.iconesAzulEscuro} onClick={e => marcaDesmarcaProcessoAcompanhado(processo, 'N')}/>
+                    <GradeIcon className={styles.iconesAzulEscuro} onClick={e => marcaDesmarcaProcessoAcompanhado(processo, 'N')} />
                 </div>)
         else return (
             <div title='Verificar semelhanças'>
@@ -75,7 +79,14 @@ const Acompanhar = () => {
             </div>)
     }
 
-    function apresentarTabelaResultadoPesquisa(lista) {
+    function formataTituloColuna(valor, colunaOrdenada, colunaAtual) {
+
+        if (colunaOrdenada === colunaAtual)
+            return (<u>{valor}</u>);
+        else return (<b>{valor}</b>);
+    }
+
+    function apresentarTabelaResultadoPesquisa(lista, colunaOrdenada) {
 
         if (lista && lista.length > 0) {
             return (
@@ -85,8 +96,10 @@ const Acompanhar = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell></TableCell>
-                                    <TableCell><b>Processo</b></TableCell>
-                                    <TableCell align="left"><b>Marca</b></TableCell>
+                                    <TableCell sx={{ cursor: "pointer" }} onClick={() => ordenarProcessosAcompanhados("PROCESSO")}>{formataTituloColuna('Processo', colunaOrdenada, 'PROCESSO')}</TableCell>
+                                    <TableCell sx={{ cursor: "pointer" }} align="left" onClick={() => ordenarProcessosAcompanhados("MARCA")}>{formataTituloColuna('Marca', colunaOrdenada, 'MARCA')}</TableCell>
+                                    <TableCell sx={{ cursor: "pointer" }} align="left" onClick={() => ordenarProcessosAcompanhados("PRIMEIRA")}>{formataTituloColuna('Prim. Reg', colunaOrdenada, 'PRIMEIRA')}.</TableCell>
+                                    <TableCell sx={{ cursor: "pointer" }} align="left" onClick={() => ordenarProcessosAcompanhados("ULTIMA")}>{formataTituloColuna('Últ. Reg.', colunaOrdenada, 'ULTIMA')}</TableCell>
                                     <TableCell align="center"><b>Classe</b></TableCell>
                                     <TableCell align="left"><b>Status</b></TableCell>
                                     <TableCell align="center"><b>Despachos</b></TableCell>
@@ -103,11 +116,13 @@ const Acompanhar = () => {
                                                 <div title='Remover processo da lista' >
                                                     <RemoveCircleIcon className={styles.iconesVermelho} style={{ cursor: 'pointer' }} onClick={e => removerProcesso(row.numeroProcesso, row.nomeMarca)} />
                                                 </div>
-                                                
+
                                             </div>
                                         </TableCell>
                                         <TableCell component="th" scope="row">{row.numeroProcesso}</TableCell>
                                         <TableCell align="left">{row.nomeMarca}</TableCell>
+                                        <TableCell align="left">{row.primeiraData}</TableCell>
+                                        <TableCell align="left">{row.ultimaData}</TableCell>
                                         <TableCell align="center">{row.classe}</TableCell>
                                         <TableCell align="left">{row.status}</TableCell>
                                         <TableCell align="center">
@@ -132,9 +147,9 @@ const Acompanhar = () => {
         <>
             <Corpo>
                 <h2>Acompanhar registros</h2>
-                {apresentarTabelaResultadoPesquisa(state.processoAcompanhadoReducer && state.processoAcompanhadoReducer.processos)}
+                {apresentarTabelaResultadoPesquisa((state.processoAcompanhadoReducer && state.processoAcompanhadoReducer.processos) || [], state.processoAcompanhadoReducer.colunaOrdenada)}
                 <br /><br />
-                <ModalProcessando apresentar = {state.geral.isLoading}/>
+                <ModalProcessando apresentar={state.geral.isLoading} />
             </Corpo>
             <ModalDespachos
                 apresentar={apresentarModalDespacho}
